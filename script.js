@@ -85,6 +85,10 @@ function setupDataChannel() {
 		addMessage('debug', 'DEBUG', "Connection closed!");
 		console.log(e);
 	}
+	dataChannel.onerror = e => {
+		addMessage('debug', 'DEBUG', "Error!");
+		console.log(e);
+	}
 	dataChannel.onmessage = e => {
 		addMessage('answer', 'Test2', e.data);
 	}
