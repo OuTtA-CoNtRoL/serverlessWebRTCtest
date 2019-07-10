@@ -93,13 +93,13 @@ function setupDataChannel(){
 function addDebugMessage(message){
 	var output = document.getElementById("chat").innerHTML;
 	var formattedMessage = "";
-	var lines = Math.floor(message.length / 80);
+	var lines = Math.floor(message.length / 62);
 	
 	for (var l = 0; l <= lines; l++) {
 		if (l == lines) {
-			formattedMessage += message.substring(l*80,message.length);
+			formattedMessage += message.substring(l*62,message.length);
 		} else {
-			formattedMessage += message.substring(l*80,(l+1)*80) + '<br>';
+			formattedMessage += message.substring(l*62,(l+1)*62) + '<br>';
 		}
 	}
 	
