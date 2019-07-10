@@ -40,7 +40,7 @@ function setupRTC() {
 		dataChannel = rtc.createDataChannel("ch1");
 		setupDataChannel();
 		updateCommObj = function(){
-			base.value = btoa(JSON.stringify(commObj));
+			base.value = document.location.origin + document.location.pathname + "#" + btoa(JSON.stringify(commObj));
 		}
 		rtc.createOffer()
 			.then(offer => rtc.setLocalDescription(offer))
@@ -125,6 +125,6 @@ function getDate() {
 function copyLink() {
 	base.select();
 	document.execCommand('copy');
-	addMessage('debug', 'DEBUG', "Copied Base64 to clipboard!");
-	window.location.href = document.location.origin + document.location.pathname + "#" + base.value;
+	addMessage('debug', 'DEBUG', "Copied Base64-Link to clipboard!");
+	window.location.href = base.value;
 }
