@@ -85,7 +85,7 @@ function setupDataChannel(){
 	input.addEventListener("change", evt=>{
 		dataChannel.send(evt.target.value);
 		//out.innerText += "\n>>" + evt.target.value + "\n";
-		addReceivedMessage(evt.target.value);
+		addSentMessage(evt.target.value);
 		requestAnimationFrame(()=>input.value="");
 	});
 }
@@ -93,13 +93,13 @@ function setupDataChannel(){
 function addDebugMessage(message){
 	var output = document.getElementById("chat").innerHTML;
 	var formattedMessage = "";
-	var lines = Math.floor(message.length / 62);
+	var lines = Math.floor(message.length / 52);
 	
 	for (var l = 0; l <= lines; l++) {
 		if (l == lines) {
-			formattedMessage += message.substring(l*62,message.length);
+			formattedMessage += message.substring(l*52,message.length);
 		} else {
-			formattedMessage += message.substring(l*62,(l+1)*62) + '<br>';
+			formattedMessage += message.substring(l*52,(l+1)*52) + '<br>';
 		}
 	}
 	
