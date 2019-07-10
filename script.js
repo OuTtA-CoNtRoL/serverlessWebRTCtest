@@ -2,18 +2,17 @@ document.addEventListener("DOMContentLoaded",() => {
 	console.log("Welcome");
 	out = document.getElementById("out");
 	input = document.getElementById("senden");
-	link = document.getElementById("link");
+	base = document.getElementById("base");
 	out.innerText += "Welcome";
 	setupRTC();
 });
-//console.log("outer hi");
 var rtc;
 var dataChannel;
 var commObj = {sdp:[],ice:[]};
 var updateCommObj;
 var out;
 var input;
-var link;
+var base;
 function setupRTC() {
 	rtc = new RTCPeerConnection({
 		iceServers:[
@@ -41,7 +40,7 @@ function setupRTC() {
 		dataChannel = rtc.createDataChannel("ch1");
 		setupDataChannel();
 		updateCommObj = function(){
-			link.href = document.location.origin + document.location.pathname + "#" + btoa(JSON.stringify(commObj));
+			base.value = btoa(JSON.stringify(commObj));
 		}
 		rtc.createOffer()
 			.then(offer => rtc.setLocalDescription(offer))
@@ -56,7 +55,6 @@ function setupRTC() {
 		var foreignObj = JSON.parse(atob(document.location.hash.slice(1)));
 		applyForeignObj(foreignObj);
 		updateCommObj = function() {
-			//out.innerText+="\n"+btoa(JSON.stringify(commObj))+"\n";
 			addMessage('debug', 'DEBUG', btoa(JSON.stringify(commObj)));
 		}
 		rtc.createAnswer()
@@ -78,15 +76,17 @@ function applyForeignObj(foreignObj) {
 }
 
 function setupDataChannel() {
-	dataChannel.onopen = console.log;
-	dataChannel.onclose = console.log;
+	dataChannel.onopen = e => {
+		addMessage('debug', 'DEBUG', "Connection established!" + e.data);
+	}
+	dataChannel.onclose = e => {
+		addMessage('debug', 'DEBUG', "Connection closed!" + e.data);
+	}
 	dataChannel.onmessage = e => {
-		//out.innerText += "\n<<" + e.data + "\n";
 		addMessage('answer', 'Test2', e.data);
 	}
 	input.addEventListener("change", evt => {
 		dataChannel.send(evt.target.value);
-		//out.innerText += "\n>>" + evt.target.value + "\n";
 		addMessage('written', 'Test1', evt.target.value);
 		requestAnimationFrame(() => input.value="");
 	});
@@ -120,4 +120,10 @@ function getDate() {
 	var today = new Date();
 	var date = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
 	return date;
+}
+
+function copyLink() {
+	base.select();
+	document.execCommand('copy');
+	window.location.href = document.location.origin + document.location.pathname + "#" + base.value;
 }
