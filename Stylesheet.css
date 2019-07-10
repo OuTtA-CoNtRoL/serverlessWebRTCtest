@@ -42,6 +42,7 @@ div.written{
 	left: 0%;
 	max-width: 90%;
 	background-color: #bff;
+	overflow-wrap: break-word;
 }
 div.written>div.name{
 	position: sticky;
@@ -61,6 +62,7 @@ div.answer{
 	left: 10%;
 	max-width: 90%;
 	background-color: #ff8;
+	overflow-wrap: break-word;
 }
 div.answer>div.name{
 	position: sticky;
@@ -80,6 +82,7 @@ div.debug{
 	left: 5%;
 	max-width: 90%;
 	background-color: #ff0000;
+	overflow-wrap: break-word;
 }
 div.debug>div.name{
 	position: sticky;

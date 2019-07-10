@@ -92,22 +92,12 @@ function setupDataChannel(){
 
 function addDebugMessage(message){
 	var output = document.getElementById("chat").innerHTML;
-	var formattedMessage = "";
-	var lines = Math.floor(message.length / 52);
-	
-	for (var l = 0; l <= lines; l++) {
-		if (l == lines) {
-			formattedMessage += message.substring(l*52,message.length);
-		} else {
-			formattedMessage += message.substring(l*52,(l+1)*52) + '<br>';
-		}
-	}
 	
 	output += '\n\t\t\t<div class = "debug">';
 	output += '\n\t\t\t\t<div class = "name">DEBUG';
 	output += '\n\t\t\t\t\t<div class = "time">' + getTime() + '</div>';
 	output += '\n\t\t\t\t</div>';
-	output += '\n\t\t\t\t<div class = "message">' + formattedMessage + '</div>';
+	output += '\n\t\t\t\t<div class = "message">' + message + '</div>';
 	output += '\n\t\t\t</div>';
 	document.getElementById("chat").innerHTML = output;
 	window.scrollTo(0,document.body.scrollHeight);
@@ -115,22 +105,12 @@ function addDebugMessage(message){
 
 function addSentMessage(message){
 	var output = document.getElementById("chat").innerHTML;
-	var formattedMessage = "";
-	var lines = Math.floor(message.length / 80);
-	
-	for (var l = 0; l <= lines; l++) {
-		if (l == lines) {
-			formattedMessage += message.substring(l*80,message.length);
-		} else {
-			formattedMessage += message.substring(l*80,(l+1)*80) + '<br>';
-		}
-	}
 	
 	output += '\n\t\t\t<div class = "written">';
 	output += '\n\t\t\t\t<div class = "name">Test1';
 	output += '\n\t\t\t\t\t<div class = "time">' + getTime() + '</div>';
 	output += '\n\t\t\t\t</div>';
-	output += '\n\t\t\t\t<div class = "message">' + formattedMessage + '</div>';
+	output += '\n\t\t\t\t<div class = "message">' + message + '</div>';
 	output += '\n\t\t\t</div>';
 	document.getElementById("chat").innerHTML = output;
 	window.scrollTo(0,document.body.scrollHeight);
@@ -138,22 +118,12 @@ function addSentMessage(message){
 
 function addReceivedMessage(message){
 	var output = document.getElementById("chat").innerHTML;
-	var formattedMessage = "";
-	var lines = Math.floor(message.length / 80);
-	
-	for (var l = 0; l <= lines; l++) {
-		if (l == lines) {
-			formattedMessage += message.substring(l*80,message.length);
-		} else {
-			formattedMessage += message.substring(l*80,(l+1)*80) + '<br>';
-		}
-	}
 	
 	output += '\n\t\t\t<div class = "answer">';
 	output += '\n\t\t\t\t<div class = "name">Test2';
 	output += '\n\t\t\t\t\t<div class = "time">' + getTime() + '</div>';
 	output += '\n\t\t\t\t</div>';
-	output += '\n\t\t\t\t<div class = "message">' + formattedMessage + '</div>';
+	output += '\n\t\t\t\t<div class = "message">' + message + '</div>';
 	output += '\n\t\t\t</div>';
 	document.getElementById("chat").innerHTML = output;
 	window.scrollTo(0,document.body.scrollHeight);
