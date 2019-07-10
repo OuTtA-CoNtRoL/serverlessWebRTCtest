@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded",()=>{
 	console.log("Welcome");
 	out = document.getElementById("out");
-	input = document.getElementById("input");
+	input = document.getElementById("senden");
 	link = document.getElementById("link");
 	out.innerText +="Welcome";
 	setupRTC();
