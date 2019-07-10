@@ -51,7 +51,7 @@ function setupRTC() {
 		input.addEventListener("change",e => {
 			applyForeignObj(JSON.parse(atob(e.target.value)));
 		});
-	}else{
+	} else {
 		var foreignObj = JSON.parse(atob(document.location.hash.slice(1)));
 		applyForeignObj(foreignObj);
 		updateCommObj = function() {
@@ -133,7 +133,6 @@ function copyLink() {
 	base.select();
 	document.execCommand('copy');
 	addMessage('debug', 'DEBUG', "Copied Base64-Link to clipboard!");
-	window.location.href = base.value;
 }
 
 function reset() {
