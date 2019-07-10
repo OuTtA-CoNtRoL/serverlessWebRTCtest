@@ -1,0 +1,158 @@
+*{
+	transition: opacity 2s ease;
+	--webkit-transition: opacity 2s ease;
+	--moz-transition: opacity 2s ease;
+	--o-transition: opacity 2s ease;
+}
+div#chat {
+	max-width: 40em;
+	background-color: #ffe;
+	//min-height: 1000em;
+	border-radius: 0.5em;
+}
+div.invisible{
+	opacity: 0;
+}
+div.visible {
+	opacity: 1;
+}
+div.dateframe{
+	position: sticky;
+	position: --webkit-sticky;
+	top: 0.5em;
+	z-index: 100;
+}
+div.date {
+	position: relative;
+	left: 40%;
+	left: calc(50% - 6em);
+	width: 12em;
+	background-color: #08F;
+	color: #FF0;
+	right: 0em;
+	text-align: center;
+	border-color: #0F0;
+	border-style: solid;
+	border-radius: 0.5em;
+	border-width: 2px;
+}
+div.written{
+	border-radius: 0.5em;
+	position: relative;
+	left: 0%;
+	max-width: 90%;
+	background-color: #bff;
+}
+div.written>div.name{
+	position: sticky;
+	position: --webkit-sticky;
+	top: 2em;
+	border-radius: 0.5em;
+	background-color: #8df;
+	text-align: center;
+	color: #00f;
+}
+div.written>div.message{
+	color: #00f;
+}
+div.answer{
+	border-radius: 0.5em;
+	position: relative;
+	left: 10%;
+	max-width: 90%;
+	background-color: #ff8;
+}
+div.answer>div.name{
+	position: sticky;
+	position: --webkit-sticky;
+	top: 2em;
+	border-radius: 0.5em;
+	background-color: #fd0;
+	text-align: center;
+	color: #08f;
+}
+div.answer>div.message{
+	color: #00f;
+}
+div.debug{
+	border-radius: 0.5em;
+	position: relative;
+	left: 5%;
+	max-width: 90%;
+	background-color: #ff0000;
+}
+div.debug>div.name{
+	position: sticky;
+	position: --webkit-sticky;
+	top: 2em;
+	border-radius: 0.5em;
+	background-color: #b30000;
+	text-align: center;
+	color: #ffff00;
+}
+div.debug>div.message{
+	color: #ffff00;
+}
+div.message{
+	margin-left:0.5em;
+	margin-right:0.5em;
+}
+div.time{
+	float:right;
+	z-index:199;
+	color:#888;
+}
+div.spacer{
+	height:4em;
+}
+div#input{
+	width:100%;
+	width: calc(100% - 1em);
+	max-width: 40em;
+	position:fixed;
+	top: 90%;
+	top: calc(100% - 2em);
+	background-color: #8f8;
+	border-radius: 0.5em;
+	margin: 0.5 em;
+	z-index: 200;
+}
+input#text{
+	position: relative;
+	left: 0.5em;
+	background-color: #bfb;
+	border-radius: 0.5em;
+	border-color: #0f0;
+	min-width: calc(100% - 7em);
+}
+input#senden{
+	position: relative;
+	left: 0.5em;
+	background-color: #bfb;
+	border-radius: 0.5em;
+	border-color: #0f0;
+	width: 5em;
+}
+div.login {
+    background-color: #8f8;
+    border-radius: 0.5em;
+    z-index: 200;
+    width: 11em;
+    position: fixed;
+    text-align: center;
+}
+div.login > form > input {
+    background-color: #bfb;
+    border-color: #0f0;
+    border-radius: 0.5em;
+    width: 10em;
+    position: relative;
+}
+div.phptext{
+    background-color: #8f8;
+	border-radius: 0.5em;
+    z-index: 200;
+    width: 11em;
+    position: fixed;
+    text-align: center;
+}

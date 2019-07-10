@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded",()=>{
-	console.log("Hi");
+	console.log("Welcome");
 	out = document.getElementById("out");
 	input = document.getElementById("input");
 	link = document.getElementById("link");
-	out.innerText +="hi";
+	out.innerText +="Welcome";
 	setupRTC();
 });
-console.log("outer hi");
+//console.log("outer hi");
 var rtc;
 var dataChannel;
 var commObj = {sdp:[],ice:[]};
@@ -78,11 +78,66 @@ function setupDataChannel(){
 	dataChannel.onopen = console.log;
 	dataChannel.onclose = console.log;
 	dataChannel.onmessage = e =>{
-		out.innerText += "\n<<" + e.data + "\n";
+		//out.innerText += "\n<<" + e.data + "\n";
+		addReceivedMessage(e.data);
 	}
 	input.addEventListener("change", evt=>{
 		dataChannel.send(evt.target.value);
-		out.innerText += "\n>>" + evt.target.value + "\n";
+		//out.innerText += "\n>>" + evt.target.value + "\n";
+		addReceivedMessage(evt.target.value);
 		requestAnimationFrame(()=>input.value="");
 	});
+}
+
+function addDebugMessage(message){
+	var output = document.getElementById("chat").innerHTML;
+	
+	output += '\n\t\t\t<div class = "debug">';
+	output += '\n\t\t\t\t<div class = "name">DEBUG';
+	output += '\n\t\t\t\t\t<div class = "time">' + getTime() + '</div>';
+	output += '\n\t\t\t\t</div>';
+	output += '\n\t\t\t\t<div class = "message">' + message + '</div>';
+	output += '\n\t\t\t</div>';
+	document.getElementById("chat").innerHTML = output;
+}
+
+function addSentMessage(message){
+	var output = document.getElementById("chat").innerHTML;
+	
+	output += '\n\t\t\t<div class = "written">';
+	output += '\n\t\t\t\t<div class = "name">Test1';
+	output += '\n\t\t\t\t\t<div class = "time">' + getTime() + '</div>';
+	output += '\n\t\t\t\t</div>';
+	output += '\n\t\t\t\t<div class = "message">' + message + '</div>';
+	output += '\n\t\t\t</div>';
+	document.getElementById("chat").innerHTML = output;
+}
+
+function addReceivedMessage(message){
+	var output = document.getElementById("chat").innerHTML;
+	
+	output += '\n\t\t\t<div class = "answer">';
+	output += '\n\t\t\t\t<div class = "name">Test2';
+	output += '\n\t\t\t\t\t<div class = "time">' + getTime() + '</div>';
+	output += '\n\t\t\t\t</div>';
+	output += '\n\t\t\t\t<div class = "message">' + message + '</div>';
+	output += '\n\t\t\t</div>';
+	document.getElementById("chat").innerHTML = output;
+}
+
+function fixDigits(time) {
+    time = ('0' + time).slice(-2);
+    return time;
+}
+
+function getTime(){
+	var today = new Date();
+	var time = fixDigits(today.getHours()) + ':' + fixDigits(today.getMinutes()) + ':' + fixDigits(today.getSeconds());
+	return time;
+}
+
+function getDate(){
+	var today = new Date();
+	var date = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
+	return date;
 }
