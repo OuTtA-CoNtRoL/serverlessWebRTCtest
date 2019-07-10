@@ -125,5 +125,6 @@ function getDate() {
 function copyLink() {
 	base.select();
 	document.execCommand('copy');
+	addMessage('debug', 'DEBUG', "Copied Base64 to clipboard!");
 	window.location.href = document.location.origin + document.location.pathname + "#" + base.value;
 }
