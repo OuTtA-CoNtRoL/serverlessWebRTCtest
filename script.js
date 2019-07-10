@@ -129,3 +129,7 @@ function copyLink() {
 	addMessage('debug', 'DEBUG', "Copied Base64-Link to clipboard!");
 	window.location.href = base.value;
 }
+
+function reset() {
+	window.location.href = document.location.origin + document.location.pathname;
+}
