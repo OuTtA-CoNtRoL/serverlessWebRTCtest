@@ -77,10 +77,11 @@ function applyForeignObj(foreignObj) {
 
 function setupDataChannel() {
 	dataChannel.onopen = e => {
-		addMessage('debug', 'DEBUG', "Connection established!" + e.data);
+		addMessage('debug', 'DEBUG', "Connection established!");
+		requestAnimationFrame(() => input.value="");
 	}
 	dataChannel.onclose = e => {
-		addMessage('debug', 'DEBUG', "Connection closed!" + e.data);
+		addMessage('debug', 'DEBUG', "Connection closed!");
 	}
 	dataChannel.onmessage = e => {
 		addMessage('answer', 'Test2', e.data);
