@@ -57,7 +57,7 @@ function setupRTC(){
 		applyForeignObj(foreignObj);
 		updateCommObj = function(){
 			//out.innerText+="\n"+btoa(JSON.stringify(commObj))+"\n";
-			addDebugMessage(btoa(JSON.stringify(commObj)));
+			addMessage('debug', 'DEBUG', btoa(JSON.stringify(commObj)));
 		}
 		rtc.createAnswer()
 			.then(answer=>rtc.setLocalDescription(answer))
@@ -80,47 +80,21 @@ function setupDataChannel(){
 	dataChannel.onclose = console.log;
 	dataChannel.onmessage = e =>{
 		//out.innerText += "\n<<" + e.data + "\n";
-		addReceivedMessage(e.data);
+		addMessage('answer', 'Test2', e.data);
 	}
 	input.addEventListener("change", evt=>{
 		dataChannel.send(evt.target.value);
 		//out.innerText += "\n>>" + evt.target.value + "\n";
-		addSentMessage(evt.target.value);
+		addMessage('written', 'Test1', evt.target.value);
 		requestAnimationFrame(()=>input.value="");
 	});
 }
 
-function addDebugMessage(message){
+function addMessage(type, name, message){
 	var output = document.getElementById("chat").innerHTML;
 	
-	output += '\n\t\t\t<div class = "debug">';
-	output += '\n\t\t\t\t<div class = "name">DEBUG';
-	output += '\n\t\t\t\t\t<div class = "time">' + getTime() + '</div>';
-	output += '\n\t\t\t\t</div>';
-	output += '\n\t\t\t\t<div class = "message">' + message + '</div>';
-	output += '\n\t\t\t</div>';
-	document.getElementById("chat").innerHTML = output;
-	window.scrollTo(0,document.body.scrollHeight);
-}
-
-function addSentMessage(message){
-	var output = document.getElementById("chat").innerHTML;
-	
-	output += '\n\t\t\t<div class = "written">';
-	output += '\n\t\t\t\t<div class = "name">Test1';
-	output += '\n\t\t\t\t\t<div class = "time">' + getTime() + '</div>';
-	output += '\n\t\t\t\t</div>';
-	output += '\n\t\t\t\t<div class = "message">' + message + '</div>';
-	output += '\n\t\t\t</div>';
-	document.getElementById("chat").innerHTML = output;
-	window.scrollTo(0,document.body.scrollHeight);
-}
-
-function addReceivedMessage(message){
-	var output = document.getElementById("chat").innerHTML;
-	
-	output += '\n\t\t\t<div class = "answer">';
-	output += '\n\t\t\t\t<div class = "name">Test2';
+	output += '\n\t\t\t<div class = "' + type + '">';
+	output += '\n\t\t\t\t<div class = "name">' + name;
 	output += '\n\t\t\t\t\t<div class = "time">' + getTime() + '</div>';
 	output += '\n\t\t\t\t</div>';
 	output += '\n\t\t\t\t<div class = "message">' + message + '</div>';
