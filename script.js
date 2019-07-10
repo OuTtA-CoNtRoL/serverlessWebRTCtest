@@ -36,10 +36,10 @@ function setupRTC() {
 		commObj.ice.push(e.candidate);
 		updateCommObj();
 	}
-	if(!document.location.hash){
+	if (!document.location.hash) {
 		dataChannel = rtc.createDataChannel("ch1");
 		setupDataChannel();
-		updateCommObj = function(){
+		updateCommObj = function() {
 			base.value = document.location.origin + document.location.pathname + "#" + btoa(JSON.stringify(commObj));
 		}
 		rtc.createOffer()
@@ -48,7 +48,7 @@ function setupRTC() {
 				commObj.sdp.push(rtc.localDescription);
 				updateCommObj();
 			});
-		input.addEventListener("change",e => {
+		input.addEventListener("change", e => {
 			applyForeignObj(JSON.parse(atob(e.target.value)));
 		});
 	} else {
