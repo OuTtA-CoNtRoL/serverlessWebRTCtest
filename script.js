@@ -1,9 +1,9 @@
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded",() => {
 	console.log("Welcome");
 	out = document.getElementById("out");
 	input = document.getElementById("senden");
 	link = document.getElementById("link");
-	out.innerText +="Welcome";
+	out.innerText += "Welcome";
 	setupRTC();
 });
 //console.log("outer hi");
@@ -14,7 +14,7 @@ var updateCommObj;
 var out;
 var input;
 var link;
-function setupRTC(){
+function setupRTC() {
 	rtc = new RTCPeerConnection({
 		iceServers:[
 			{
@@ -33,7 +33,7 @@ function setupRTC(){
 			}
 		]
 	});
-	rtc.onicecandidate = e =>{
+	rtc.onicecandidate = e => {
 		commObj.ice.push(e.candidate);
 		updateCommObj();
 	}
@@ -44,49 +44,51 @@ function setupRTC(){
 			link.href = document.location.origin + document.location.pathname + "#" + btoa(JSON.stringify(commObj));
 		}
 		rtc.createOffer()
-			.then(offer=>rtc.setLocalDescription(offer))
-			.then(()=>{
+			.then(offer => rtc.setLocalDescription(offer))
+			.then(() => {
 				commObj.sdp.push(rtc.localDescription);
 				updateCommObj();
 			});
-		input.addEventListener("change",e=>{
+		input.addEventListener("change",e => {
 			applyForeignObj(JSON.parse(atob(e.target.value)));
 		});
 	}else{
 		var foreignObj = JSON.parse(atob(document.location.hash.slice(1)));
 		applyForeignObj(foreignObj);
-		updateCommObj = function(){
+		updateCommObj = function() {
 			//out.innerText+="\n"+btoa(JSON.stringify(commObj))+"\n";
 			addMessage('debug', 'DEBUG', btoa(JSON.stringify(commObj)));
 		}
 		rtc.createAnswer()
-			.then(answer=>rtc.setLocalDescription(answer))
-			.then(()=>{
+			.then(answer => rtc.setLocalDescription(answer))
+			.then(() => {
 				commObj.sdp.push(rtc.localDescription);
 				updateCommObj();
 			});
-		rtc.ondatachannel = e=>{
+		rtc.ondatachannel = e => {
 			dataChannel = e.channel;
 			setupDataChannel();
 		};
 	}
 }
-function applyForeignObj(foreignObj){
-	foreignObj.sdp.forEach(sdp=>rtc.setRemoteDescription(sdp));
-	foreignObj.ice.forEach(ice=>rtc.addIceCandidate(ice));
+
+function applyForeignObj(foreignObj) {
+	foreignObj.sdp.forEach(sdp => rtc.setRemoteDescription(sdp));
+	foreignObj.ice.forEach(ice => rtc.addIceCandidate(ice));
 }
-function setupDataChannel(){
+
+function setupDataChannel() {
 	dataChannel.onopen = console.log;
 	dataChannel.onclose = console.log;
-	dataChannel.onmessage = e =>{
+	dataChannel.onmessage = e => {
 		//out.innerText += "\n<<" + e.data + "\n";
 		addMessage('answer', 'Test2', e.data);
 	}
-	input.addEventListener("change", evt=>{
+	input.addEventListener("change", evt => {
 		dataChannel.send(evt.target.value);
 		//out.innerText += "\n>>" + evt.target.value + "\n";
 		addMessage('written', 'Test1', evt.target.value);
-		requestAnimationFrame(()=>input.value="");
+		requestAnimationFrame(() => input.value="");
 	});
 }
 
@@ -100,7 +102,7 @@ function addMessage(type, name, message){
 	output += '\n\t\t\t\t<div class = "message">' + message + '</div>';
 	output += '\n\t\t\t</div>';
 	document.getElementById("chat").innerHTML = output;
-	window.scrollTo(0,document.body.scrollHeight);
+	window.scrollTo(0, document.body.scrollHeight);
 }
 
 function fixDigits(time) {
@@ -108,13 +110,13 @@ function fixDigits(time) {
     return time;
 }
 
-function getTime(){
+function getTime() {
 	var today = new Date();
 	var time = fixDigits(today.getHours()) + ':' + fixDigits(today.getMinutes()) + ':' + fixDigits(today.getSeconds());
 	return time;
 }
 
-function getDate(){
+function getDate() {
 	var today = new Date();
 	var date = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
 	return date;
