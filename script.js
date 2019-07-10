@@ -81,13 +81,11 @@ function setupDataChannel(){
 	dataChannel.onmessage = e =>{
 		//out.innerText += "\n<<" + e.data + "\n";
 		addReceivedMessage(e.data);
-		window.scrollTo(0,document.body.scrollHeight);
 	}
 	input.addEventListener("change", evt=>{
 		dataChannel.send(evt.target.value);
 		//out.innerText += "\n>>" + evt.target.value + "\n";
 		addSentMessage(evt.target.value);
-		window.scrollTo(0,document.body.scrollHeight);
 		requestAnimationFrame(()=>input.value="");
 	});
 }
@@ -112,6 +110,7 @@ function addDebugMessage(message){
 	output += '\n\t\t\t\t<div class = "message">' + formattedMessage + '</div>';
 	output += '\n\t\t\t</div>';
 	document.getElementById("chat").innerHTML = output;
+	window.scrollTo(0,document.body.scrollHeight);
 }
 
 function addSentMessage(message){
@@ -134,6 +133,7 @@ function addSentMessage(message){
 	output += '\n\t\t\t\t<div class = "message">' + formattedMessage + '</div>';
 	output += '\n\t\t\t</div>';
 	document.getElementById("chat").innerHTML = output;
+	window.scrollTo(0,document.body.scrollHeight);
 }
 
 function addReceivedMessage(message){
@@ -156,6 +156,7 @@ function addReceivedMessage(message){
 	output += '\n\t\t\t\t<div class = "message">' + formattedMessage + '</div>';
 	output += '\n\t\t\t</div>';
 	document.getElementById("chat").innerHTML = output;
+	window.scrollTo(0,document.body.scrollHeight);
 }
 
 function fixDigits(time) {
