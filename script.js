@@ -56,7 +56,8 @@ function setupRTC(){
 		var foreignObj = JSON.parse(atob(document.location.hash.slice(1)));
 		applyForeignObj(foreignObj);
 		updateCommObj = function(){
-			out.innerText+="\n"+btoa(JSON.stringify(commObj))+"\n";
+			//out.innerText+="\n"+btoa(JSON.stringify(commObj))+"\n";
+			addDebugMessage(btoa(JSON.stringify(commObj)));
 		}
 		rtc.createAnswer()
 			.then(answer=>rtc.setLocalDescription(answer))
