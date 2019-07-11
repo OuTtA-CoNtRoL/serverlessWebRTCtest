@@ -56,6 +56,7 @@ function setupRTC() {
 		updateCommObj = function() {
 			base.value = btoa(JSON.stringify(commObj));
 			baseLink.value = document.location.origin + document.location.pathname + "#" + btoa(JSON.stringify(commObj));
+			addMessage('debug', 'DEBUG', 'New Base64-Code created!');
 		}
 		rtc.createOffer()
 			.then(offer => rtc.setLocalDescription(offer))
