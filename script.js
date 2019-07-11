@@ -108,7 +108,7 @@ function setupDataChannel() {
 	}
 	input.addEventListener("change", evt => {
 		dataChannel.send(evt.target.value);
-		addMessage('written', nameSender, evt.target.value);
+		addMessage('written', commObj.name, evt.target.value);
 		requestAnimationFrame(() => input.value="");
 	});
 }
