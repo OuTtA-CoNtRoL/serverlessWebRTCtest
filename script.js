@@ -144,7 +144,7 @@ function getDate() {
 }
 
 function copyLink() {
-	if ((commObj.name == undefined) || (commObj.value == '')) {
+	if ((commObj.name == undefined) || (commObj.name == '')) {
 		commObj.name = 'Default client';
 		addMessage('debug', 'DEBUG', "Name set to: Default client");
 	}
