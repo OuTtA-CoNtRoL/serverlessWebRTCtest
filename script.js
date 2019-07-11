@@ -21,7 +21,6 @@ var rtc;
 var dataChannel;
 var commObj = {sdp:[], ice:[], name};
 var foreignCommObj;
-var updateCommObj;
 var out;
 var input;
 var base;
@@ -57,11 +56,6 @@ function setupRTC() {
 	if (!document.location.hash) {
 		dataChannel = rtc.createDataChannel('ch1');
 		setupDataChannel();
-		updateCommObj = function() {
-			base.value = btoa(JSON.stringify(commObj));
-			baseLink.value = document.location.origin + document.location.pathname + "#" + btoa(JSON.stringify(commObj));
-			addMessage('debug', 'DEBUG', 'New Base64-Code created!');
-		}
 		rtc.createOffer()
 			.then(offer => rtc.setLocalDescription(offer))
 			.then(() => {
@@ -77,11 +71,6 @@ function setupRTC() {
 		applyForeignObj(foreignCommObj);
 		commObj.name = 'Client' + randomName;
 		addMessage('info', 'INFO', 'Name set to: Client' + randomName);
-		updateCommObj = function() {
-			base.value = btoa(JSON.stringify(commObj));
-			baseLink.value = document.location.origin + document.location.pathname + "#" + btoa(JSON.stringify(commObj));
-			addMessage('debug', 'DEBUG', 'New Base64-Code created!');
-		}
 		rtc.createAnswer()
 			.then(answer => rtc.setLocalDescription(answer))
 			.then(() => {
@@ -125,6 +114,12 @@ function setupDataChannel() {
 		addMessage('written', commObj.name, evt.target.value);
 		requestAnimationFrame(() => input.value="");
 	});
+}
+
+function updateCommObj() {
+	base.value = btoa(JSON.stringify(commObj));
+	baseLink.value = document.location.origin + document.location.pathname + "#" + btoa(JSON.stringify(commObj));
+	addMessage('debug', 'DEBUG', 'New Base64-Code created!');
 }
 
 function addMessage(type, name, message){
