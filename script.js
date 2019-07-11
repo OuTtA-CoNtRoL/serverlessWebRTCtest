@@ -94,6 +94,8 @@ function setupDataChannel() {
 		addMessage('debug', 'DEBUG', "Connection established!");
 		console.log(e);
 		requestAnimationFrame(() => input.value="");
+		nameSender.disabled = true;
+		requestAnimationFrame(() => nameSender.value="");
 	}
 	dataChannel.onclose = e => {
 		addMessage('debug', 'DEBUG', "Connection closed!");
