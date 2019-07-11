@@ -187,7 +187,6 @@ function reset() {
 }
 
 function hideDebug() {
-	console.log("pressed");
 	debug = document.getElementsByClassName('debug');
 	for (var i = 0; i < debug.length; i++) {
 		if (debugCheckBox.checked == true) {
