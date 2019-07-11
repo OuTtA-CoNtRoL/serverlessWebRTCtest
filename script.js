@@ -128,7 +128,6 @@ function addMessage(type, name, message){
 	if (debugCheckBox.checked == true && type == 'debug') {
 		setVis = 'display:none';
 	}
-	
 	output += '\n\t\t\t<div class = "' + type + '" style = "' + setVis + '">';
 	output += '\n\t\t\t\t<div class = "name">' + name;
 	output += '\n\t\t\t\t\t<div class = "time">' + getTime() + '</div>';
