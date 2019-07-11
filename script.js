@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded',() => {
 	out = document.getElementById('out');
 	input = document.getElementById('senden');
 	base = document.getElementById('base');
+	baseLink = document.getElementById('baseLink');
 	nameSender = document.getElementById('name');
 	nameSender.addEventListener('change', evt => {
 		commObj.name = nameSender.value;
@@ -22,6 +23,7 @@ var updateCommObj;
 var out;
 var input;
 var base;
+var baseLink;
 var nameSender;
 var nameReceiver = '';
 var randomName;
@@ -52,7 +54,8 @@ function setupRTC() {
 		dataChannel = rtc.createDataChannel('ch1');
 		setupDataChannel();
 		updateCommObj = function() {
-			base.value = document.location.origin + document.location.pathname + "#" + btoa(JSON.stringify(commObj));
+			base.value = btoa(JSON.stringify(commObj));
+			baseLink.value = document.location.origin + document.location.pathname + "#" + btoa(JSON.stringify(commObj));
 		}
 		rtc.createOffer()
 			.then(offer => rtc.setLocalDescription(offer))
@@ -70,7 +73,9 @@ function setupRTC() {
 		commObj.name = 'Client' + randomName;
 		addMessage('debug', 'DEBUG', 'Name set to: Client' + randomName);
 		updateCommObj = function() {
-			addMessage('debug', 'DEBUG', btoa(JSON.stringify(commObj)));
+			base.value = btoa(JSON.stringify(commObj));
+			baseLink.value = document.location.origin + document.location.pathname + "#" + btoa(JSON.stringify(commObj));
+			addMessage('debug', 'DEBUG', 'New Base64-Code created!');
 		}
 		rtc.createAnswer()
 			.then(answer => rtc.setLocalDescription(answer))
@@ -153,9 +158,20 @@ function copyLink() {
 		addMessage('debug', 'DEBUG', 'Name set to: Client' + randomName);
 		updateCommObj();
 	}
-	base.select();
+	baseLink.select();
 	document.execCommand('copy');
 	addMessage('debug', 'DEBUG', 'Copied Base64-Link to clipboard!');
+}
+
+function copyBase() {
+	if ((commObj.name == undefined) || (commObj.name == '')) {
+		commObj.name = 'Client' + randomName;
+		addMessage('debug', 'DEBUG', 'Name set to: Client' + randomName);
+		updateCommObj();
+	}
+	base.select();
+	document.execCommand('copy');
+	addMessage('debug', 'DEBUG', 'Copied Base64-Code to clipboard!');
 }
 
 function reset() {
