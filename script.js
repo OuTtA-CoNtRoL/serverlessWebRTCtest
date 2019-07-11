@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded',() => {
 		updateCommObj();
 	});
 	randomName = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+	debug = document.getElementsByClassName('debug');
 	debugCheckBox = document.getElementById('hideDebug');
 	out.innerText += 'Welcome';
 	setupRTC();
@@ -187,7 +188,6 @@ function reset() {
 }
 
 function hideDebug() {
-	debug = document.getElementsByClassName('debug');
 	for (var i = 0; i < debug.length; i++) {
 		if (debugCheckBox.checked == true) {
 			debug[i].style.display = 'none';
