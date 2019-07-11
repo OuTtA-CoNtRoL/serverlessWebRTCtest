@@ -94,6 +94,26 @@ div.debug>div.message{
 	color: #ffff00;
 	hyphens: manual;
 }
+div.info{
+	border-radius: 0.5em;
+	position: relative;
+	left: 5%;
+	max-width: 90%;
+	background-color: #ff0000;
+}
+div.info>div.name{
+	position: sticky;
+	position: --webkit-sticky;
+	top: 2em;
+	border-radius: 0.5em;
+	background-color: #b30000;
+	text-align: center;
+	color: #ffff00;
+}
+div.info>div.message{
+	color: #ffff00;
+	hyphens: manual;
+}
 div.message{
 	margin-left:0.5em;
 	margin-right:0.5em;
