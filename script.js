@@ -3,16 +3,25 @@ document.addEventListener("DOMContentLoaded",() => {
 	out = document.getElementById("out");
 	input = document.getElementById("senden");
 	base = document.getElementById("base");
+	nameSender = document.getElementById("name");
+	nameSender.addEventListener("change", evt => {
+		commObj.name = nameSender.value;
+		addMessage('debug', 'DEBUG', "Name set to: " + nameSender.value);
+		requestAnimationFrame(() => nameSender.value="");
+	});
 	out.innerText += "Welcome";
 	setupRTC();
 });
 var rtc;
 var dataChannel;
-var commObj = {sdp:[],ice:[],name};
+var commObj = {sdp:[], ice:[], name};
+var foreignCommObj;
 var updateCommObj;
 var out;
 var input;
 var base;
+var nameSender;
+var nameReceiver = "";
 function setupRTC() {
 	rtc = new RTCPeerConnection({
 		iceServers:[
@@ -49,11 +58,16 @@ function setupRTC() {
 				updateCommObj();
 			});
 		input.addEventListener("change", e => {
-			applyForeignObj(JSON.parse(atob(e.target.value)));
+			foreignCommObj = JSON.parse(atob(e.target.value));
+			applyForeignObj(foreignCommObj);
 		});
 	} else {
-		var foreignObj = JSON.parse(atob(document.location.hash.slice(1)));
-		applyForeignObj(foreignObj);
+		foreignCommObj = JSON.parse(atob(document.location.hash.slice(1)));
+		applyForeignObj(foreignCommObj);
+		if ((commObj.name == undefined) || (commObj.value == '')) {
+			commObj.name = 'Default client';
+			addMessage('debug', 'DEBUG', "Name set to: Default client");
+		}
 		updateCommObj = function() {
 			addMessage('debug', 'DEBUG', btoa(JSON.stringify(commObj)));
 		}
@@ -73,6 +87,7 @@ function setupRTC() {
 function applyForeignObj(foreignObj) {
 	foreignObj.sdp.forEach(sdp => rtc.setRemoteDescription(sdp));
 	foreignObj.ice.forEach(ice => rtc.addIceCandidate(ice));
+	nameReceiver = foreignObj.name;
 }
 
 function setupDataChannel() {
@@ -90,11 +105,11 @@ function setupDataChannel() {
 		console.log(e);
 	}
 	dataChannel.onmessage = e => {
-		addMessage('answer', 'Test2', e.data);
+		addMessage('answer', nameReceiver, e.data);
 	}
 	input.addEventListener("change", evt => {
 		dataChannel.send(evt.target.value);
-		addMessage('written', 'Test1', evt.target.value);
+		addMessage('written', nameSender, evt.target.value);
 		requestAnimationFrame(() => input.value="");
 	});
 }
@@ -130,6 +145,11 @@ function getDate() {
 }
 
 function copyLink() {
+	if ((commObj.name == undefined) || (commObj.value == '')) {
+		commObj.name = 'Default client';
+		addMessage('debug', 'DEBUG', "Name set to: Default client");
+	}
+	updateCommObj();
 	base.select();
 	document.execCommand('copy');
 	addMessage('debug', 'DEBUG', "Copied Base64-Link to clipboard!");
