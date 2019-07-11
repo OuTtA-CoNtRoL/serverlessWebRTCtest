@@ -1,16 +1,17 @@
-document.addEventListener("DOMContentLoaded",() => {
-	console.log("Welcome");
-	out = document.getElementById("out");
-	input = document.getElementById("senden");
-	base = document.getElementById("base");
-	nameSender = document.getElementById("name");
-	nameSender.addEventListener("change", evt => {
+document.addEventListener('DOMContentLoaded',() => {
+	console.log('Welcome');
+	out = document.getElementById('out');
+	input = document.getElementById('senden');
+	base = document.getElementById('base');
+	nameSender = document.getElementById('name');
+	nameSender.addEventListener('change', evt => {
 		commObj.name = nameSender.value;
-		addMessage('debug', 'DEBUG', "Name set to: " + nameSender.value);
-		requestAnimationFrame(() => nameSender.value="");
+		addMessage('debug', 'DEBUG', 'Name set to: ' + nameSender.value);
+		requestAnimationFrame(() => nameSender.value='');
 		updateCommObj();
 	});
-	out.innerText += "Welcome";
+	randomName = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+	out.innerText += 'Welcome';
 	setupRTC();
 });
 var rtc;
@@ -22,7 +23,8 @@ var out;
 var input;
 var base;
 var nameSender;
-var nameReceiver = "";
+var nameReceiver = '';
+var randomName;
 function setupRTC() {
 	rtc = new RTCPeerConnection({
 		iceServers:[
@@ -47,7 +49,7 @@ function setupRTC() {
 		updateCommObj();
 	}
 	if (!document.location.hash) {
-		dataChannel = rtc.createDataChannel("ch1");
+		dataChannel = rtc.createDataChannel('ch1');
 		setupDataChannel();
 		updateCommObj = function() {
 			base.value = document.location.origin + document.location.pathname + "#" + btoa(JSON.stringify(commObj));
@@ -58,15 +60,15 @@ function setupRTC() {
 				commObj.sdp.push(rtc.localDescription);
 				updateCommObj();
 			});
-		input.addEventListener("change", e => {
+		input.addEventListener('change', e => {
 			foreignCommObj = JSON.parse(atob(e.target.value));
 			applyForeignObj(foreignCommObj);
 		});
 	} else {
 		foreignCommObj = JSON.parse(atob(document.location.hash.slice(1)));
 		applyForeignObj(foreignCommObj);
-		commObj.name = 'Default client';
-		addMessage('debug', 'DEBUG', "Name set to: Default client");
+		commObj.name = 'Client' + randomName;
+		addMessage('debug', 'DEBUG', 'Name set to: Client' + randomName);
 		updateCommObj = function() {
 			addMessage('debug', 'DEBUG', btoa(JSON.stringify(commObj)));
 		}
@@ -91,24 +93,24 @@ function applyForeignObj(foreignObj) {
 
 function setupDataChannel() {
 	dataChannel.onopen = e => {
-		addMessage('debug', 'DEBUG', "Connection established!");
+		addMessage('debug', 'DEBUG', 'Connection established!');
 		console.log(e);
-		requestAnimationFrame(() => input.value="");
+		requestAnimationFrame(() => input.value='');
 		nameSender.disabled = true;
-		requestAnimationFrame(() => nameSender.value="");
+		requestAnimationFrame(() => nameSender.value='');
 	}
 	dataChannel.onclose = e => {
-		addMessage('debug', 'DEBUG', "Connection closed!");
+		addMessage('debug', 'DEBUG', 'Connection closed!');
 		console.log(e);
 	}
 	dataChannel.onerror = e => {
-		addMessage('debug', 'DEBUG', "Error!");
+		addMessage('debug', 'DEBUG', 'Error!');
 		console.log(e);
 	}
 	dataChannel.onmessage = e => {
 		addMessage('answer', nameReceiver, e.data);
 	}
-	input.addEventListener("change", evt => {
+	input.addEventListener('change', evt => {
 		dataChannel.send(evt.target.value);
 		addMessage('written', commObj.name, evt.target.value);
 		requestAnimationFrame(() => input.value="");
@@ -116,7 +118,7 @@ function setupDataChannel() {
 }
 
 function addMessage(type, name, message){
-	var output = document.getElementById("chat").innerHTML;
+	var output = document.getElementById('chat').innerHTML;
 	
 	output += '\n\t\t\t<div class = "' + type + '">';
 	output += '\n\t\t\t\t<div class = "name">' + name;
@@ -124,7 +126,7 @@ function addMessage(type, name, message){
 	output += '\n\t\t\t\t</div>';
 	output += '\n\t\t\t\t<div class = "message">' + message + '</div>';
 	output += '\n\t\t\t</div>';
-	document.getElementById("chat").innerHTML = output;
+	document.getElementById('chat').innerHTML = output;
 	window.scrollTo(0, document.body.scrollHeight);
 }
 
@@ -147,13 +149,13 @@ function getDate() {
 
 function copyLink() {
 	if ((commObj.name == undefined) || (commObj.name == '')) {
-		commObj.name = 'Default client';
-		addMessage('debug', 'DEBUG', "Name set to: Default client");
+		commObj.name = 'Client' + randomName;
+		addMessage('debug', 'DEBUG', 'Name set to: Client' + randomName);
 		updateCommObj();
 	}
 	base.select();
 	document.execCommand('copy');
-	addMessage('debug', 'DEBUG', "Copied Base64-Link to clipboard!");
+	addMessage('debug', 'DEBUG', 'Copied Base64-Link to clipboard!');
 }
 
 function reset() {
