@@ -147,6 +147,7 @@ function copyLink() {
 	if ((commObj.name == undefined) || (commObj.name == '')) {
 		commObj.name = 'Default client';
 		addMessage('debug', 'DEBUG', "Name set to: Default client");
+		updateCommObj();
 	}
 	base.select();
 	document.execCommand('copy');
