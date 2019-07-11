@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded",() => {
 });
 var rtc;
 var dataChannel;
-var commObj = {sdp:[],ice:[]};
+var commObj = {sdp:[],ice:[],name};
 var updateCommObj;
 var out;
 var input;
