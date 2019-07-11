@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded",() => {
 		commObj.name = nameSender.value;
 		addMessage('debug', 'DEBUG', "Name set to: " + nameSender.value);
 		requestAnimationFrame(() => nameSender.value="");
+		updateCommObj();
 	});
 	out.innerText += "Welcome";
 	setupRTC();
@@ -64,10 +65,8 @@ function setupRTC() {
 	} else {
 		foreignCommObj = JSON.parse(atob(document.location.hash.slice(1)));
 		applyForeignObj(foreignCommObj);
-		if ((commObj.name == undefined) || (commObj.value == '')) {
-			commObj.name = 'Default client';
-			addMessage('debug', 'DEBUG', "Name set to: Default client");
-		}
+		commObj.name = 'Default client';
+		addMessage('debug', 'DEBUG', "Name set to: Default client");
 		updateCommObj = function() {
 			addMessage('debug', 'DEBUG', btoa(JSON.stringify(commObj)));
 		}
@@ -149,7 +148,6 @@ function copyLink() {
 		commObj.name = 'Default client';
 		addMessage('debug', 'DEBUG', "Name set to: Default client");
 	}
-	updateCommObj();
 	base.select();
 	document.execCommand('copy');
 	addMessage('debug', 'DEBUG', "Copied Base64-Link to clipboard!");
