@@ -94,9 +94,9 @@ function setupDataChannel() {
 	dataChannel.onopen = e => {
 		addMessage('info', 'INFO', 'Connection established!');
 		console.log(e);
-		requestAnimationFrame(() => input.value='');
+		requestAnimationFrame(() => input.value = '');
 		nameSender.disabled = true;
-		requestAnimationFrame(() => nameSender.value='');
+		requestAnimationFrame(() => nameSender.value = '');
 	}
 	dataChannel.onclose = e => {
 		addMessage('info', 'INFO', 'Connection closed!');
@@ -112,7 +112,7 @@ function setupDataChannel() {
 	input.addEventListener('change', evt => {
 		dataChannel.send(evt.target.value);
 		addMessage('written', commObj.name, evt.target.value);
-		requestAnimationFrame(() => input.value="");
+		requestAnimationFrame(() => input.value = '');
 	});
 }
 
