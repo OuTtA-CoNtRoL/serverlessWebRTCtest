@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded',() => {
 	});
 	randomName = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 	debug = document.getElementsByClassName('debug');
+	debugText = document.getElementById('hideDebugText');
 	debugCheckBox = document.getElementById('hideDebug');
 	out.innerText += 'Welcome';
 	setupRTC();
@@ -29,6 +30,8 @@ var nameSender;
 var nameReceiver = '';
 var randomName;
 var debug;
+var debugText;
+var debugCounter = 0;
 var debugCheckBox;
 function setupRTC() {
 	rtc = new RTCPeerConnection({
@@ -125,8 +128,12 @@ function updateCommObj() {
 function addMessage(type, name, message){
 	var output = document.getElementById('chat').innerHTML;
 	var setVis = 'display:block';
-	if (debugCheckBox.checked == true && type == 'debug') {
-		setVis = 'display:none';
+	if (type == 'debug') {
+		debugCounter++;
+		debugText.innerText = 'Hide debug (' + debugCounter + ')';
+		if (debugCheckBox.checked == true) {
+			setVis = 'display:none';
+		}
 	}
 	output += '\n\t\t\t<div class = "' + type + '" style = "' + setVis + '">';
 	output += '\n\t\t\t\t<div class = "name">' + name;
