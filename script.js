@@ -11,17 +11,34 @@ document.addEventListener('DOMContentLoaded',() => {
 		requestAnimationFrame(() => nameSender.value='');
 		updateCommObj();
 	});
+	clientID =  Math.random().toString(36).substr(2, 9);
 	randomName = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 	debug = document.getElementsByClassName('debug');
 	debugText = document.getElementById('hideDebugText');
 	debugCheckBox = document.getElementById('hideDebug');
 	out.innerText += 'Welcome';
+	input.addEventListener('change', evt => {
+		var counter = 0;
+		connections.forEach(function(e) {
+			try {
+				e.dataChannel.send(evt.target.value);
+			} catch(e) {
+				connections.splice(getIndexFromID(e.id), 1);
+				counter--;
+			}
+			counter++;
+		});
+		addMessage('written', commObj.name, evt.target.value);
+		requestAnimationFrame(() => input.value = '');
+	});
 	setupRTC();
 });
 var rtc;
+var controlChannel;
 var dataChannel;
-var commObj = {sdp:[], ice:[], name};
+var commObj = {sdp:[], ice:[], id:'', name:'',};
 var foreignCommObj;
+var connections = [];
 var out;
 var input;
 var base;
@@ -33,6 +50,11 @@ var debug;
 var debugText;
 var debugCounter = 0;
 var debugCheckBox;
+var clientID;
+var foreignClientID;
+var baseList = [];
+var baseAList = [];
+var lastAddID;
 function setupRTC() {
 	rtc = new RTCPeerConnection({
 		iceServers:[
@@ -56,67 +78,126 @@ function setupRTC() {
 		if (e.candidate) commObj.ice.push(e.candidate);
 		updateCommObj();
 	}
-	if (!document.location.hash) {
-		dataChannel = rtc.createDataChannel('ch1');
-		setupDataChannel();
-		rtc.createOffer()
-			.then(offer => rtc.setLocalDescription(offer))
-			.then(() => {
-				commObj.sdp.push(rtc.localDescription);
-				updateCommObj();
-			});
-		input.addEventListener('change', e => {
-			foreignCommObj = JSON.parse(atob(e.target.value));
-			applyForeignObj(foreignCommObj);
+	commObj.id = clientID;
+}
+
+function createOffer() {
+	controlChannel = rtc.createDataChannel('controlChannel');
+	dataChannel = rtc.createDataChannel('dataChannel');
+	rtc.createOffer()
+		.then(offer => rtc.setLocalDescription(offer))
+		.then(() => {
+			commObj.sdp.push(rtc.localDescription);
+			updateCommObj();
 		});
-	} else {
-		foreignCommObj = JSON.parse(atob(document.location.hash.slice(1)));
-		applyForeignObj(foreignCommObj);
+}
+
+function createAnswer(base) {
+	foreignCommObj = JSON.parse(atob(base));
+	applyForeignObj(foreignCommObj);
+	if (commObj.name == null) {	
 		commObj.name = 'Client' + randomName;
 		addMessage('info', 'INFO', 'Name set to: Client' + randomName);
-		rtc.createAnswer()
-			.then(answer => rtc.setLocalDescription(answer))
-			.then(() => {
-				commObj.sdp.push(rtc.localDescription);
-				updateCommObj();
-			});
-		rtc.ondatachannel = e => {
-			dataChannel = e.channel;
-			setupDataChannel();
-		};
 	}
+	rtc.createAnswer()
+		.then(answer => rtc.setLocalDescription(answer))
+		.then(() => {
+			commObj.sdp.push(rtc.localDescription);
+			updateCommObj();
+		});
+	rtc.ondatachannel = e => {
+		if (e.channel.label == 'controlChannel') {
+			controlChannel = e.channel;
+		} else {
+			dataChannel = e.channel;
+		}
+		addToConnectionsArray();
+	};
 }
 
 function applyForeignObj(foreignObj) {
 	foreignObj.sdp.forEach(sdp => rtc.setRemoteDescription(sdp));
 	foreignObj.ice.forEach(ice => rtc.addIceCandidate(ice));
+	foreignClientID = foreignObj.id;
 	nameReceiver = foreignObj.name;
 }
 
-function setupDataChannel() {
-	dataChannel.onopen = e => {
+function setupControlChannel(coChannel, id) {
+	coChannel.onopen = e => {
+		console.log(e);
+	}
+	coChannel.onclose = e => {
+		connections.splice(getIndexFromID(id), 1);
+		console.log(e);
+	}
+	coChannel.onerror = e => {
+		connections.splice(getIndexFromID(id), 1);
+		console.log(e);
+	}
+	coChannel.onmessage = e => {
+		if (e.data == 'GET: OFFER-BASE') {
+			createOffer();
+			coChannel.send('OFFER-BASE: ' + base.value);
+		} else if (e.data.startsWith('OFFER-BASE: ')) {
+			baseList.push(e.data.slice(12));
+		} else if (e.data.startsWith('JOIN: ')) {
+			createAnswer(e.data.slice(6));
+			coChannel.send('ANSWER-BASE: ' + base.value);
+		} else if (e.data.startsWith('ANSWER-BASE: ')) {
+			///PLEASE CHANGE THIS///
+			baseAList.push(e.data.slice(13));
+		} else if (e.data.startsWith('ADD: ')) {
+			addToConnectionsArrayBase(e.data.slice(5));
+			///PLEASE CHANGE THIS///
+			createOffer();
+		}
+		console.log(e.data);
+	}
+}
+
+function setupDataChannel(daChannel, name) {
+	daChannel.onopen = e => {
 		addMessage('info', 'INFO', 'Connection established!');
 		console.log(e);
 		requestAnimationFrame(() => input.value = '');
 		nameSender.disabled = true;
 		requestAnimationFrame(() => nameSender.value = '');
 	}
-	dataChannel.onclose = e => {
+	daChannel.onclose = e => {
 		addMessage('info', 'INFO', 'Connection closed!');
 		console.log(e);
 	}
-	dataChannel.onerror = e => {
+	daChannel.onerror = e => {
 		addMessage('info', 'INFO', 'Error!');
 		console.log(e);
 	}
-	dataChannel.onmessage = e => {
-		addMessage('answer', nameReceiver, e.data);
+	daChannel.onmessage = e => {
+		addMessage('answer', name, e.data);
 	}
-	input.addEventListener('change', evt => {
-		dataChannel.send(evt.target.value);
-		addMessage('written', commObj.name, evt.target.value);
-		requestAnimationFrame(() => input.value = '');
-	});
+}
+
+function addToConnectionsArray() {
+	if (controlChannel != null && dataChannel != null) {
+		var userInfo = {rtc:rtc, controlChannel:controlChannel, dataChannel:dataChannel, id:foreignClientID, name:nameReceiver};
+		controlChannel = null;
+		dataChannel = null;
+		connections.push(userInfo);
+		setupControlChannel(connections[connections.length - 1].controlChannel, connections[connections.length - 1].id);
+		setupDataChannel(connections[connections.length - 1].dataChannel, connections[connections.length - 1].name);
+		setupRTC();
+	}
+}
+
+function addToConnectionsArrayBase(base) {
+	foreignCommObj = JSON.parse(atob(base));
+	applyForeignObj(foreignCommObj);
+	var userInfo = {rtc:rtc, controlChannel:controlChannel, dataChannel:dataChannel, id:foreignClientID, name:nameReceiver};
+	connections.push(userInfo);
+	setupControlChannel(connections[connections.length - 1].controlChannel, connections[connections.length - 1].id);
+	setupDataChannel(connections[connections.length - 1].dataChannel, connections[connections.length - 1].name);
+	lastAddID = connections[connections.length - 1].id;
+	//startFullMesh();
+	setupRTC();
 }
 
 function updateCommObj() {
@@ -145,6 +226,51 @@ function addMessage(type, name, message){
 	window.scrollTo(0, document.body.scrollHeight);
 }
 
+function startFullMesh() {
+	if (connections.length > 1) {
+		//fetchBaseList();
+		///NEEDS TO BE CHANGED - ONLY FOR TESTING///
+		//sleep(1000);
+		var counter = 0;
+		connections.forEach(function(e) {
+			if (e.id != lastAddID) {
+				connections[getIndexFromID(lastAddID)].controlChannel.send('JOIN: ' + baseList[counter]);
+				console.log('JOIN: ' + baseList[counter]);
+				counter++;
+			}
+		});
+		/*sleep(2000);
+		counter = 0;
+		connections.forEach(function(e) {
+			if (e.id != lastAddID) {
+				e.controlChannel.send('ADD: ' + baseAList[counter]);
+				console.log('ADD: ' + baseAList[counter]);
+				counter++;
+			}
+		});*/
+	}
+}
+
+//Control Commands//
+function fetchBaseList() {
+	baseList = [];
+	connections.forEach(function(e) {
+		if (e.id != lastAddID) {
+			e.controlChannel.send('GET: OFFER-BASE');
+		}
+	});
+}
+////////////////////////////////
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
 function fixDigits(time) {
     time = ('0' + time).slice(-2);
     return time;
@@ -160,6 +286,18 @@ function getDate() {
 	var today = new Date();
 	var date = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
 	return date;
+}
+
+function getIndexFromID(id) {
+	var counter = 0;
+	var result = -1;
+	connections.forEach(function(e) {
+		if (e.id == id) {
+			result = counter;
+		}
+		counter++;
+	});
+	return result;
 }
 
 function copyLink() {
@@ -182,6 +320,23 @@ function copyBase() {
 	base.select();
 	document.execCommand('copy');
 	addMessage('info', 'INFO', 'Copied Base64-Code to clipboard!');
+}
+
+function singleStart() {
+	createOffer();
+}
+
+function join() {
+	var promptInput = prompt('Enter Base64-Code');
+	createAnswer(promptInput);
+}
+
+function addUser() {
+	var promptInput = prompt('Enter Base64-Code');
+	addToConnectionsArrayBase(promptInput);
+	///PLEASE CHANGE THIS///
+	createOffer();
+	//fetchBaseList();
 }
 
 function reset() {

@@ -39,7 +39,7 @@ div.date {
 div.written{
 	border-radius: 0.5em;
 	position: relative;
-	left: 0%;
+	left: 10%;
 	max-width: 90%;
 	background-color: #bff;
 }
@@ -58,7 +58,7 @@ div.written>div.message{
 div.answer{
 	border-radius: 0.5em;
 	position: relative;
-	left: 10%;
+	left: 0%;
 	max-width: 90%;
 	background-color: #ff8;
 }

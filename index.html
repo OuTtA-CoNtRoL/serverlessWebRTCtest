@@ -8,7 +8,10 @@
 		<label for="name">Name: </label>
 		<input type="text" id="name" name="name" size="20"/>
 		<button onclick="copyBase()">Copy Base64-Code</button>
-		<button onclick="copyLink()">Copy Base64-Link</button>
+		<button onclick="copyLink()" disabled>Copy Base64-Link</button>
+		<button onclick="singleStart()">Single start</button>
+		<button onclick="join()">Join</button>
+		<button onclick="addUser()">Add user</button>
 		<button onclick="reset()">Reset</button>
 		<input type="checkbox" id="hideDebug" name="hideDebug" onclick="hideDebug()" checked>
 		<label for="hideDebug" id="hideDebugText">Hide debug</label>
