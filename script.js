@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded',() => {
+document.addEventListener('DOMContentLoaded', () => {
 	// Get HTML-Elements
 	out = document.getElementById('out');
 	input = document.getElementById('senden');
